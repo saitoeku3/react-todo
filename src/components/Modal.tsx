@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, createRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import DateTimePicker from 'react-datetime-picker'
 import dayjs from 'dayjs'
@@ -16,6 +16,7 @@ const Modal = ({ closeModal, task }: Props) => {
   const [title, setTitle] = useState<string>(task ? task.title : '')
   const [body, setBody] = useState<string>(task ? task.body : '')
   const [deadline, setDeadline] = useState<number>(task ? task.deadline : Date.now())
+  const titleRef = createRef<HTMLInputElement>()
 
   const addTask = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -59,6 +60,12 @@ const Modal = ({ closeModal, task }: Props) => {
     }
   }
 
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus()
+    }
+  }, [])
+
   return createPortal(
     <Wrapper onClick={closeModal}>
       <Content onClick={event => event.stopPropagation()}>
@@ -70,6 +77,7 @@ const Modal = ({ closeModal, task }: Props) => {
               type="text"
               value={title}
               onChange={event => setTitle(event.target.value)}
+              ref={titleRef}
               required
             />
           </div>
