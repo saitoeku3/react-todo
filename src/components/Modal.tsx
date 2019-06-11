@@ -15,6 +15,7 @@ const Modal = ({ closeModal, task }: Props) => {
   const { state, dispatch } = useContext(TaskContext)
   const [title, setTitle] = useState<string>(task ? task.title : '')
   const [body, setBody] = useState<string>(task ? task.body : '')
+  const [image, setImage] = useState<string>(task ? task.image : '')
   const [deadline, setDeadline] = useState<number>(task ? task.deadline : Date.now())
   const titleRef = createRef<HTMLInputElement>()
 
@@ -25,6 +26,7 @@ const Modal = ({ closeModal, task }: Props) => {
       title,
       body,
       isDone: false,
+      image,
       deadline: deadline,
       createdAt: Date.now()
     }
@@ -41,7 +43,7 @@ const Modal = ({ closeModal, task }: Props) => {
   const updateTask = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (task) {
-      const updatedTask = { ...task, title, body, deadline }
+      const updatedTask = { ...task, title, body, image, deadline }
       dispatch({ type: 'UPDATE_TASK', payload: { task: updatedTask } })
     }
     if (closeModal) {
@@ -58,6 +60,25 @@ const Modal = ({ closeModal, task }: Props) => {
     if (result) {
       dispatch({ type: 'REMOVE_TASK', payload: { task } })
     }
+  }
+
+  const readFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
+      return
+    }
+    const file = event.target.files[0]
+    const reader = new FileReader()
+    reader.onload = (readerEvent: any) => {
+      if (readerEvent.target && readerEvent.target.result) {
+        setImage(readerEvent.target.result)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const deleteImage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault()
+    setImage('')
   }
 
   useEffect(() => {
@@ -84,6 +105,29 @@ const Modal = ({ closeModal, task }: Props) => {
           <div>
             <Labal>Memo</Labal>
             <TextArea value={body} onChange={event => setBody(event.target.value)} required />
+          </div>
+          <div>
+            <Labal>Image</Labal>
+            {image ? (
+              <img
+                src={image}
+                alt=""
+                style={{ height: '200px', display: 'block', marginBottom: '8px' }}
+              />
+            ) : (
+              <div
+                style={{
+                  height: '200px',
+                  width: '200px',
+                  border: '1px solid #bbb',
+                  marginBottom: '8px'
+                }}
+              >
+                no image
+              </div>
+            )}
+            <ImageSelector type="file" onChange={readFile} accept="png,jpeg,jpg,gif,svg" />
+            <Button bg="#b44848" color="#fff" onClick={deleteImage}>Delete Image</Button>
           </div>
           <div>
             <Labal>Deadline</Labal>
@@ -126,7 +170,7 @@ const Content = styled.div`
   border: 1px solid #bbb;
   border-radius: 8px;
   cursor: default;
-  height: 360px;
+  height: 640px;
   width: 480px;
   margin: 10vh auto;
   padding: 32px;
@@ -158,6 +202,13 @@ const TextArea = styled.textarea`
   resize: none;
   height: 120px;
   width: 80%;
+`
+
+const ImageSelector = styled.input`
+  cursor: pointer;
+  font-size: 0.75rem;
+  height: 32px;
+  width: 88px;
 `
 
 const SubmitBtn = styled.input`

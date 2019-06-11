@@ -5,6 +5,7 @@ export type Task = {
   title: string
   body: string
   isDone: boolean
+  image: string
   deadline: number
   createdAt: number
 }
