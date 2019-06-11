@@ -23,6 +23,9 @@ const Btn = styled.button<{ bg: string; color: string }>`
   font-size: 0.75rem;
   height: 32px;
   padding: 8px 20px;
+  &:hover {
+    filter: brightness(0.85);
+  }
 `
 
 export default Button

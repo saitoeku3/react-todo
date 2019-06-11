@@ -42,7 +42,9 @@ const Card = ({ className, task, toggleCheck }: Props) => {
           onChange={toggleCheck}
           onClick={event => event.stopPropagation()}
         />
-        <Title deadline={deadline}>{title}</Title>
+        <Title deadline={deadline} isDone={isDone}>
+          {title}
+        </Title>
       </div>
       {hovered && <FAIcon icon={faEdit} />}
     </Wrapper>
@@ -62,17 +64,15 @@ const Wrapper = styled.li<{ hovored: boolean }>`
   padding: 4px 12px;
 `
 
-const Title = styled.span<{ deadline: number }>`
+const Title = styled.span<{ deadline: number; isDone: boolean }>`
   margin-left: 8px;
   color: ${props => {
-    if (props.deadline < Date.now()) {
+    const tomorrow = dayjs(Date.now())
+      .add(1, 'day')
+      .valueOf()
+    if (props.deadline < Date.now() && !props.isDone) {
       return 'red'
-    } else if (
-      props.deadline <=
-      dayjs(Date.now())
-        .add(1, 'day')
-        .valueOf()
-    ) {
+    } else if (props.deadline <= tomorrow && !props.isDone) {
       return 'orange'
     }
   }};
