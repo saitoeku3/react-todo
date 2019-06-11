@@ -44,6 +44,7 @@ const Card = ({ className, task, toggleCheck }: Props) => {
         />
         <Title deadline={deadline} isDone={isDone}>
           {title}
+          <span style={{ marginLeft: '16px' }}>{dayjs(deadline).format('MM/DD HH:mm')}</span>
         </Title>
       </div>
       {hovered && <FAIcon icon={faEdit} />}
