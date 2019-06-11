@@ -1,4 +1,4 @@
-# React TODO
+# React To Do
 
 ## Command
 
@@ -13,5 +13,3 @@ Start
 ```bash
 yarn dev
 ```
-
-## Description
