@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { render } from 'react-dom'
 import styled from 'styled-components'
-import TaskCard from './components/TaskCard'
+import 'normalize.css'
+import TaskCard from './components/Card'
 import TaskProvider, { Task, TaskContext } from './context/task'
-import TaskForm from './components/TaskForm'
+import Button from './components/Button'
+import Modal from './components/Modal'
 
 type FilterCondition = 'DONE' | 'NOT_DONE' | 'ALL'
 
 const App = () => {
   const { state, dispatch } = useContext(TaskContext)
   const [filterCondition, setFilterCondition] = useState<FilterCondition>('ALL')
+  const [openedNewModal, setOpenedNewModal] = useState<boolean>(false)
 
   const taskListFilter = (tasks: Task[], condition: FilterCondition): Task[] => {
     switch (condition) {
@@ -23,14 +26,11 @@ const App = () => {
   }
 
   const taskList = taskListFilter(state.tasks, filterCondition).map(task => {
-    const toggleDone = () => {
-      const updatedTask: Task = {
-        ...task,
-        isDone: !task.isDone
-      }
+    const toggleIsDone = () => {
+      const updatedTask: Task = { ...task, isDone: !task.isDone }
       dispatch({ type: 'UPDATE_TASK', payload: { task: updatedTask } })
     }
-    return <TaskCard key={task.id} task={task} toggleCheck={toggleDone} />
+    return <TaskCard key={task.id} task={task} toggleCheck={toggleIsDone} />
   })
 
   // Set tasks
@@ -51,12 +51,17 @@ const App = () => {
 
   return (
     <Wrapper>
-      <h1>To Do</h1>
-      <TaskForm />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h1>To Do</h1>
+        <NewButton bg="#62AFDB" color="#fff" onClick={() => setOpenedNewModal(true)}>
+          New
+        </NewButton>
+      </div>
+      {openedNewModal && <Modal closeModal={() => setOpenedNewModal(false)} />}
       <Filter>
         <div>Filter</div>
         <div>
-          <input
+          <Checkbox
             type="radio"
             name="filter"
             value="ALL"
@@ -65,18 +70,16 @@ const App = () => {
           />
           <label>All</label>
         </div>
+        <Checkbox
+          type="radio"
+          name="filter"
+          value="DONE"
+          onChange={e => setFilterCondition(e.target.value as FilterCondition)}
+          checked={filterCondition === 'DONE'}
+        />
+        <label>Done</label>
         <div>
-          <input
-            type="radio"
-            name="filter"
-            value="DONE"
-            onChange={e => setFilterCondition(e.target.value as FilterCondition)}
-            checked={filterCondition === 'DONE'}
-          />
-          <label>Done</label>
-        </div>
-        <div>
-          <input
+          <Checkbox
             type="radio"
             name="filter"
             value="NOT_DONE"
@@ -92,11 +95,20 @@ const App = () => {
 }
 
 const Wrapper = styled.div`
-  padding: 16px 10vw;
+  padding: 16px 30vw;
 `
 
 const Filter = styled.div`
-  margin: 50px 0;
+  margin: 16px 0 0 100px;
+`
+
+const Checkbox = styled.input`
+  cursor: pointer;
+  margin: 8px 8px 0 0;
+`
+
+const NewButton = styled(Button)`
+  margin: auto 0;
 `
 
 render(

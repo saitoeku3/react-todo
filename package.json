@@ -7,7 +7,12 @@
     "build": "parcel build index.html --public-url ./"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-regular-svg-icons": "^5.9.0",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "dayjs": "^1.8.14",
+    "normalize.css": "^8.0.1",
     "react": "^16.8.6",
     "react-datetime-picker": "^2.4.0",
     "react-dom": "^16.8.6",
@@ -22,7 +27,6 @@
     "babel-core": "^6.26.3",
     "parcel": "^1.12.3",
     "parcel-bundler": "^1.12.3",
-    "react-hot-loader": "^4.9.0",
     "typescript": "^3.5.1"
   }
 }

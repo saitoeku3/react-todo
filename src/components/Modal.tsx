@@ -2,16 +2,16 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 import { Task } from '../context/task'
-import TaskForm from './TaskForm'
+import TaskForm from './Form'
 
 type Props = {
-  task: Task
+  task?: Task
   closeModal: () => void
 }
 
-const TaskEditModal = ({ closeModal, task }: Props) => createPortal(
+const Modal = ({ closeModal, task }: Props) => createPortal(
     <Wrapper onClick={closeModal}>
-      <EditForm task={task} afterSubmit={closeModal} />
+      <EditForm task={task} afterSubmit={closeModal} hasCloseBtn />
     </Wrapper>,
     document.body
   )
@@ -38,4 +38,4 @@ const EditForm = styled(TaskForm)`
   padding: 32px;
 `
 
-export default TaskEditModal
+export default Modal
